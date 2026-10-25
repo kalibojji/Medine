@@ -273,7 +273,7 @@ function rowHtml(w,g,i,showPips){
   const p=parseAr(w.ar),m=wordMin(g,i);
   let pips='';
   if(showPips){pips='<div class="pips" aria-label="Niveau de mémorisation">';for(let k=1;k<=5;k++)pips+='<i class="'+(m>=k?'on':'')+'"></i>';pips+='</div>'}
-  return '<div class="w'+(w.x?' x':'')+'"><div class="f"><div>'+esc(w.fr)+(p.note?' <span class="muted">('+esc(p.note)+')</span>':'')+'</div>'+plHtml(w)+pips+'</div><div class="ar">'+esc(p.main)+'</div></div>';
+  return '<div class="w'+(w.x&&!SHARED?' x':'')+'"><div class="f"><div>'+esc(w.fr)+(p.note?' <span class="muted">('+esc(p.note)+')</span>':'')+'</div>'+plHtml(w)+pips+'</div><div class="ar">'+esc(p.main)+'</div></div>';
 }
 const IMMERSIVE=['session','quiz','sent','gstep','gres'];
 function go(v){try{rdStop()}catch(e){}closeZoom();clearInterval(qtimer);if(v.n==='home')daily=null;view=v;if(IMMERSIVE.indexOf(v.n)<0){try{history.pushState({v:JSON.parse(JSON.stringify(v))},'')}catch(e){}}render();window.scrollTo(0,0)}
@@ -486,7 +486,7 @@ function libV(){
   h+='</div><div class="lrange"><label>De la leçon <select class="search sel" id="liba">'+r23.map(k=>opt(k,lib.a)).join('')+'</select></label><label>à <select class="search sel" id="libb">'+r23.map(k=>opt(k,lib.b)).join('')+'</select></label><label>Blocs de <select class="search sel" id="libsz">'+[2,3,5,10].map(k=>opt(k,lib.sz)).join('')+'</select></label></div><div class="lchips">';
   h+='<button class="segb'+(lib.a===1&&lib.b===23?' on':'')+'" data-act="lblk" data-a="1" data-b="23">Toutes</button>';
   for(let a=1;a<=23;a+=lib.sz){const b=Math.min(23,a+lib.sz-1);h+='<button class="segb'+(lib.a===a&&lib.b===b?' on':'')+'" data-act="lblk" data-a="'+a+'" data-b="'+b+'">'+(a===b?a:a+'–'+b)+'</button>'}
-  h+='</div><p class="legend">Les mots ajoutés (leçons 11 à 23 et compléments) sont en <b>italique et en couleur</b>.</p><div id="liblist">'+libListV()+'</div>';
+  h+='</div>'+(SHARED?'':'<p class="legend">Les mots ajoutés (leçons 11 à 23 et compléments) sont en <b>italique et en couleur</b>.</p>')+'<div id="liblist">'+libListV()+'</div>';
   return h;
 }
 
@@ -956,7 +956,7 @@ function hardV(){
   h+='<button class="btn primary" style="margin-top:14px" data-act="hardtest">Réviser ces mots ('+Math.min(L.length,30)+')</button><div class="card" style="margin-top:14px;padding-block:6px">';
   L.slice(0,60).forEach(x=>{
     const p=parseAr(x.w.ar);
-    h+='<div class="w'+(x.w.x?' x':'')+'"><div class="f"><div>'+esc(x.w.fr)+'</div><div class="pl">raté '+x.f+' fois · réussi '+x.o+' fois</div></div><div class="ar">'+esc(p.main)+'</div></div>';
+    h+='<div class="w'+(x.w.x&&!SHARED?' x':'')+'"><div class="f"><div>'+esc(x.w.fr)+'</div><div class="pl">raté '+x.f+' fois · réussi '+x.o+' fois</div></div><div class="ar">'+esc(p.main)+'</div></div>';
   });
   return h+'</div>';
 }
