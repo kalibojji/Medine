@@ -1,4 +1,4 @@
-const V='medine-1794420360';
+const V='medine-1794494056';
 const CORE=["./", "index.html", "manifest.json", "icon-192.png", "icon-512.png", "apple-touch-icon.png"];
 self.addEventListener('install',e=>{e.waitUntil(caches.open(V).then(c=>Promise.allSettled(CORE.map(u=>c.add(new Request(u,{cache:'reload'}))))).then(()=>self.skipWaiting()))});
 self.addEventListener('activate',e=>{const P=V.split('-')[0]+'-';e.waitUntil(caches.keys().then(k=>Promise.all(k.filter(x=>x.indexOf(P)===0&&x!==V).map(x=>caches.delete(x)))).then(()=>self.clients.claim()))});
