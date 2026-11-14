@@ -259,6 +259,7 @@ h2{font-size:12px;letter-spacing:.1em;margin:26px 0 10px}
 .gbtn{min-height:60px;border-radius:16px}
 input.search{min-height:52px;border-radius:14px}
 @media (hover:none){.kbonly{display:none}}
+.opts{grid-template-columns:1fr;gap:8px}.tile.opt{display:flex;align-items:center;gap:12px;text-align:left;font-family:var(--font-ui);font-size:17px;line-height:1.35;min-height:58px;padding:10px 12px;border-radius:14px;direction:ltr}.tile.opt .ob{flex:none;width:28px;height:28px;border-radius:9px;background:var(--bg);display:grid;place-items:center;font-weight:800;font-size:13px;color:var(--muted)}.tile.opt .ot{flex:1;min-width:0}.tile.opt .ot.ar{font-family:var(--font-ar);font-size:24px;direction:rtl;text-align:right;line-height:1.5}
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
 </style>
 <style>/* Refonte visuelle V3 */
@@ -1644,7 +1645,7 @@ function quizV(){
   it.opts.forEach((o,i)=>{
     let cls=it.ar?'':' fr';
     if(qz.sel!==null){if(i===it.a)cls+=' good';else if(i===qz.sel)cls+=' bad'}
-    h+='<button class="tile'+cls+'" data-act="qpick" data-v="'+i+'"'+(qz.sel!==null?' disabled':'')+'>'+optTxt(o,it.ar)+'</button>';
+    h+='<button class="tile opt'+cls+'" data-act="qpick" data-v="'+i+'"'+(qz.sel!==null?' disabled':'')+'><span class="ob">'+'ABCDEFGH'[i]+'</span><span class="ot'+(it.ar?' ar':'')+'">'+optTxt(o,it.ar)+'</span></button>';
   });
   h+='</div>'}
   if(qz.sel!==null){
