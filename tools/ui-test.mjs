@@ -63,6 +63,8 @@ const goto = async (act, name) => {
 await goto('home', '03-accueil-complet.png')
 await goto('train', '04-entrainement.png')
 await goto('more', '05-plus.png')
+await goto('hub', '05b-exercices.png')
+await goto('stats', '05c-statistiques.png')
 await goto('surahs', '06-coran.png')
 
 const tabs = await page.locator('.tabbar .tb').count()

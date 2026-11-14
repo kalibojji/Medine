@@ -816,6 +816,7 @@ function trainV(){
   let h='<h1>S\'entraîner</h1>';
   const ad=trAdaptive(),due=dueIds().length;
   h+='<div class="card next"><span class="label">Séance adaptée à ton niveau</span><b>'+(ad.pick.length?'On travaille la leçon '+ad.pick.join(', '):'Rien à travailler')+'</b><span class="muted" style="font-size:14px">'+(ad.pick.length?'Les points faibles viennent en premier ('+Math.round(ad.avg)+' % de maîtrise sur ces leçons)'+(ad.write?'. Niveau solide : tu écris les réponses.':'.'):'Ajoute une leçon au parcours.')+'</span><button class="btn primary" style="margin-top:8px" data-act="tradapt"'+(ad.ids.length?'':' disabled')+'>Lancer la séance adaptée</button>'+(due?'<button class="btn" style="margin-top:8px" data-act="trdue">'+due+' carte'+(due>1?'s':'')+' à réviser</button>':'')+'</div>';
+  {const L=hardList();if(L.length>=3)h+='<button class="card objc" style="margin-top:12px;grid-template-columns:1fr auto" data-act="hardtest"><span><span class="label">À consolider</span><b>'+L.length+' mot'+(L.length>1?'s':'')+' difficile'+(L.length>1?'s':'')+'</b><span class="muted" style="font-size:13px;display:block">Plus souvent ratés que réussis · les réviser maintenant</span></span><span class="muted" aria-hidden="true">›</span></button>'}
   h+='<details class="dt" id="d-trr"'+(ui.trr?' open':'')+'><summary><span>Leçons travaillées : '+(r.a===r.b?'leçon '+r.a:r.a+' à '+r.b)+'<span class="muted" style="display:block;font-weight:400;font-size:13px">Pour les activités ci-dessous · toucher pour changer</span></span></summary><div class="in"><div class="lchips">'+chip(1,P,'1 à '+P)+(P>2?chip(Math.max(1,P-2),P,'Dernières 3'):'')+chip(P,P,'Leçon '+P)+chip(1,GN,'Tout')+'</div><div class="lrange" style="margin-top:10px"><label>De <select class="search sel" id="tra">'+rg.map(k=>opt(k,r.a)).join('')+'</select></label><label>à <select class="search sel" id="trb">'+rg.map(k=>opt(k,r.b)).join('')+'</select></label></div><div class="trbars">';
   trLessons().forEach(l=>{const m=mast(l);h+='<div class="tb2"><span>'+l+'</span><i><b style="height:'+m+'%"></b></i></div>'});
   h+='</div></div></details>';
@@ -1652,13 +1653,14 @@ function hardV(){
   });
   return h+'</div>';
 }
+function retentionStat(minGap){const last={};let n=0,ok=0;const parse=v=>{const q=v.split('-').map(Number);return new Date(q[0],q[1]-1,q[2])};(S.rl||[]).forEach(r=>{const id=r[0],d=r[1],g=r[2];const prev=last[id];if(prev){const gap=Math.round((parse(d)-parse(prev))/864e5);if(gap>=minGap){n++;if(g>1)ok++}}last[id]=d});return {n:n,pct:n?Math.round(ok/n*100):null}}
 function statsV(){
   const gl=S.goal||20,tn=S.log[today()]||0,sk=streak();
   const days=Object.keys(S.log).filter(d=>S.log[d]>0).length;
   const total=Object.keys(S.log).reduce((a,d)=>a+S.log[d],0);
   let h='<div class="top"><button class="link" data-act="hub">← Exercices</button></div><h1 style="margin-top:6px">Statistiques</h1>';
   h+='<div class="stats"><div class="card stat"><div class="n">'+sk+'</div><div class="l">jour'+(sk>1?'s':'')+' d\'affilée</div></div><div class="card stat"><div class="n">'+days+'</div><div class="l">jours d\'étude</div></div><div class="card stat"><div class="n">'+total+'</div><div class="l">réponses données</div></div></div>';
-  h+='<h2>Objectif quotidien</h2><div class="card"><div class="top"><b>Aujourd\'hui</b><span class="muted">'+tn+' / '+gl+'</span></div><div class="bar"><i style="width:'+Math.min(100,Math.round(tn/gl*100))+'%"></i></div><div class="seg" style="margin-top:12px">';
+  const R7=retentionStat(7);h+='<h2>Mémoire</h2><div class="card">'+(R7.n?'<div class="top"><b>Rappel après 7 jours ou plus</b><span>'+R7.pct+' %</span></div><div class="muted" style="font-size:13px;margin-top:2px">'+R7.n+' révision'+(R7.n>1?'s':'')+' concernée'+(R7.n>1?'s':'')+'</div>':'<div class="muted" style="font-size:14px">La mesure apparaîtra après quelques jours de révision : elle compare les rappels réussis aux prédictions du moteur.</div>')+'</div>';h+='<h2>Objectif quotidien</h2><div class="card"><div class="top"><b>Aujourd\'hui</b><span class="muted">'+tn+' / '+gl+'</span></div><div class="bar"><i style="width:'+Math.min(100,Math.round(tn/gl*100))+'%"></i></div><div class="seg" style="margin-top:12px">';
   [10,20,30,50].forEach(v=>{h+='<button class="segb'+(gl===v?' on':'')+'" aria-pressed="'+(gl===v)+'" data-act="goal" data-v="'+v+'">'+v+'</button>'});
   h+='</div></div>'+timeHtml()+upcomingHtml()+weekHtml()+badgesHtml()+capHtml()+diagHtml()+'<h2>Progression par leçon</h2><div class="card" style="padding-block:8px">';
   qLessons().forEach(l=>{
