@@ -3,7 +3,8 @@
  * Static checks for the single-file build. Fails fast with an explicit report.
  * Run: node tools/check.mjs
  */
-import { readFileSync, existsSync, writeFileSync, mkdtempSync } from 'node:fs'
+import { readFileSync, existsSync, writeFileSync, mkdtempSync, readdirSync, statSync } from 'node:fs'
+import { gzipSync } from 'node:zlib'
 import { tmpdir } from 'node:os'
 import { join, resolve, dirname } from 'node:path'
 import { execFileSync } from 'node:child_process'
@@ -19,6 +20,8 @@ const ok = (label, condition, detail = '') => {
 
 const index = readFileSync(join(root, 'index.html'), 'utf8')
 ok('index.html non vide', index.length > 100000, `${index.length} caractères`)
+const gzipBytes = gzipSync(Buffer.from(index, 'utf8')).length
+ok('budget HTML compressé', gzipBytes < 700 * 1024, `${Math.round(gzipBytes / 1024)} Ko compressés`)
 
 const doctype = index.match(/^<!doctype html>/i)
 ok('doctype html', Boolean(doctype))
@@ -45,6 +48,11 @@ ok('références de polices présentes', fontRefs.length > 0, `${fontRefs.length
 for (const ref of fontRefs) {
   ok(`police ${ref}`, existsSync(join(root, 'fonts', ref)))
 }
+const fontDir = join(root, 'fonts')
+const fontBytes = existsSync(fontDir)
+  ? readdirSync(fontDir).reduce((n, name) => n + statSync(join(fontDir, name)).size, 0)
+  : 0
+ok('budget polices', fontBytes < 400 * 1024, `${Math.round(fontBytes / 1024)} Ko`)
 
 const jsonMatch = index.match(/<script type="application\/json"[^>]*>([\s\S]*?)<\/script>/)
 ok('script de données présent', Boolean(jsonMatch))
