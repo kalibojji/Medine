@@ -62,6 +62,10 @@ hadiths, alphabet, conjugaison, dictée, écoute, enregistrement, badges, object
 8. **Accueil de plus de 3 000 px** et six grilles de fonctions qui dupliquaient le menu : → accueil
    ramené à ~1 650 px avec six entrées vers un écran **Explorer** par catégorie ; menu *Plus*
    regroupé par usage (Mon suivi, Apprendre, Données et rappels, Aide).
+9. **Hiérarchie visuelle et cibles tactiles** inégales sur mobile : → couche de raffinement (cibles
+   52–60 px, rayons, ombres et espacements cohérents, onglet actif en pastille, recherche agrandie),
+   *S'entraîner* allégé, focus déplacé sur le titre à chaque changement d'écran, aide des raccourcis
+   affichée seulement au clavier, et respect de `prefers-reduced-motion`.
 
 ### Restant
 8. **Poids initial** : 1,46 Mo de JS inline et 775 Ko de données dans le HTML ; rien n'est interactif
