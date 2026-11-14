@@ -23,6 +23,8 @@ await page.goto(pathToFileURL(resolve(root, 'index.html')).href)
 await page.waitForTimeout(900)
 await page.locator('[data-act="hellogo"]').first().click()
 await page.waitForTimeout(300)
+await page.locator('[data-act="placedeb"]').first().click()
+await page.waitForTimeout(300)
 await page.locator('[data-act="home"]').first().click()
 await page.waitForTimeout(300)
 

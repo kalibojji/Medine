@@ -580,7 +580,7 @@ let hasAr=false;
 let lib={q:'',th:'',a:1,b:23,sz:5};
 let tcfg={l:new Set(),dir:'both',n:20};
 
-function fixS(o){o.log=o.log||{};o.st=o.st||{};o.goal=o.goal||20;o.exams=o.exams||[];o.started=o.started||[];o.cards=o.cards||{};o.guide=o.guide||{};o.guide.done=o.guide.done||{};o.guide.pos=o.guide.pos||{};o.err=o.err||{};o.sm=o.sm||{};o.time=o.time||{};o.xc=o.xc||{};o.sur=o.sur||{};o.rep=o.rep||[];o.bk=o.bk||0;if(!o.mig26){if(o.tm){for(let i=3;i>=0;i--){const k='26-'+i;if(o.tm[k]!=null){o.tm['26-'+(i+14)]=o.tm[k];delete o.tm[k]}}}o.mig26=1}return o}
+function fixS(o){o.log=o.log||{};o.st=o.st||{};o.goal=o.goal||20;o.exams=o.exams||[];o.started=o.started||[];o.cards=o.cards||{};o.place=o.place||null;o.ecrit=o.ecrit||0;o.guide=o.guide||{};o.guide.done=o.guide.done||{};o.guide.pos=o.guide.pos||{};o.err=o.err||{};o.sm=o.sm||{};o.time=o.time||{};o.xc=o.xc||{};o.sur=o.sur||{};o.rep=o.rep||[];o.bk=o.bk||0;if(!o.mig26){if(o.tm){for(let i=3;i>=0;i--){const k='26-'+i;if(o.tm[k]!=null){o.tm['26-'+(i+14)]=o.tm[k];delete o.tm[k]}}}o.mig26=1}return o}
 function blank(){return fixS({v:1,ts:0,started:[],cards:{}})}
 function fmt(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
 function today(){return fmt(new Date())}
@@ -625,7 +625,7 @@ function groupStatus(g){
   const ws=DATA[g-1].words;
   return ws.every((_,w)=>(wordMin(g,w)||0)>=3)?2:1;
 }
-function dueIds(){const t=today();return Object.keys(S.cards).filter(k=>S.cards[k].d<=t)}
+function dueIds(){const t=today();return Object.keys(S.cards).filter(k=>S.cards[k].d<=t&&(S.ecrit||k.slice(-3)==='.af'))}
 function counts(){
   let started=0,solid=0;
   DATA.forEach(gr=>{if(S.started.indexOf(gr.g)>=0){started+=gr.words.length;gr.words.forEach((_,w)=>{if((wordMin(gr.g,w)||0)>=3)solid++})}});
@@ -826,13 +826,23 @@ function pathV(){
   h+=G.recapHtml()+'</div>';
   return h;
 }
+function placeV(){
+  let h='<div class="mast"><span class="eyebrow">Démarrage</span><h1>Où en es-tu ?</h1><p class="sub">Leçons, révisions et recommandations seront calibrées sur ta réponse.</p></div>';
+  h+='<div class="list" style="margin-top:18px">';
+  h+='<button class="row" style="grid-template-columns:1fr auto" data-act="placedeb"><span><span class="t">Je débute</span><br><span class="s">Commencer à la leçon 1</span></span><span class="muted" aria-hidden="true">›</span></button>';
+  h+='<button class="row" style="grid-template-columns:1fr auto" data-act="placemid"><span><span class="t">J\'ai déjà avancé</span><br><span class="s">Choisir ma leçon actuelle</span></span><span class="muted" aria-hidden="true">›</span></button>';
+  h+='<button class="row" style="grid-template-columns:1fr auto" data-act="placefin"><span><span class="t">J\'ai terminé le tome 1</span><br><span class="s">Réviser tout, puis passer à l\'écriture</span></span><span class="muted" aria-hidden="true">›</span></button>';
+  h+='</div>';
+  if(view.mid)h+='<div class="card" style="margin-top:16px"><label class="label" for="plsel">Ma leçon actuelle</label><select class="search sel" id="plsel">'+Array.from({length:GN},(_,i)=>'<option value="'+(i+1)+'">Leçon '+(i+1)+'</option>').join('')+'</select><button class="btn primary" style="margin-top:10px" data-act="placeset">Valider</button></div>';
+  return h;
+}
 function learnV(){
   const P=prog(),nv=Object.keys(S.guide.done).length;
   let h='<div class="mast"><span class="eyebrow">Tome de Médine</span><h1>Apprendre</h1><p class="sub">'+P+' leçons au programme · '+nv+' validées</p></div>';
   h+='<div class="card" style="margin-top:16px"><div class="top"><b>Parcours guidé</b><span class="chip">'+nv+' / '+GN+'</span></div><div class="bar" style="margin-top:8px" aria-hidden="true"><i style="width:'+Math.round(nv/GN*100)+'%"></i></div><button class="btn primary" style="margin-top:12px" data-act="guide">'+(nv?'Continuer le parcours':'Commencer la leçon 1')+'</button></div>';
   h+='<h2>Leçons</h2><div class="list">';
   for(let l=1;l<=P;l++)h+=lrowHtml(l,P);
-  h+='</div><h2>Ressources</h2><div class="list">'+[['tomes','Autres livres','Médine 2-3, Riyadh, Al-Asâsî','lib'],['alpha','Alphabet','Lettres, voyelles, tracé','abc'],['lessons','Pages du livre','Fiche de chaque leçon','doc'],['rulesref','Aide-mémoire','Toutes les règles','rule']].map(o=>'<button class="row hrow k-lec" data-act="'+o[0]+'"><span class="hri">'+hIc(o[3])+'</span><span><span class="t">'+o[1]+'</span><br><span class="s">'+o[2]+'</span></span><span class="muted" aria-hidden="true">›</span></button>').join('')+'</div>';
+  h+='</div>';h+=(!S.ecrit&&prog()>=GN&&Object.keys(S.guide.done).length>=GN?'<div class="card" style="margin-top:16px"><span class="label">Plus loin</span><b>Passer à l\'écriture</b><span class="muted" style="display:block;font-size:14px">Tome 1 terminé : ajoute la production arabe (français → arabe, dictée) à tes révisions.</span><button class="btn" style="margin-top:10px" data-act="ecriton">Activer l\'écriture</button></div>':'');h+='<h2>Ressources</h2><div class="list">'+[['tomes','Autres livres','Médine 2-3, Riyadh, Al-Asâsî','lib'],['alpha','Alphabet','Lettres, voyelles, tracé','abc'],['lessons','Pages du livre','Fiche de chaque leçon','doc'],['rulesref','Aide-mémoire','Toutes les règles','rule']].map(o=>'<button class="row hrow k-lec" data-act="'+o[0]+'"><span class="hri">'+hIc(o[3])+'</span><span><span class="t">'+o[1]+'</span><br><span class="s">'+o[2]+'</span></span><span class="muted" aria-hidden="true">›</span></button>').join('')+'</div>';
   return h;
 }
 function explorerV(k){
@@ -892,7 +902,7 @@ function trainV(){
   h+='<details class="dt" id="d-trr"'+(ui.trr?' open':'')+'><summary><span>Leçons travaillées : '+(r.a===r.b?'leçon '+r.a:r.a+' à '+r.b)+'<span class="muted" style="display:block;font-weight:400;font-size:13px">Pour les activités ci-dessous · toucher pour changer</span></span></summary><div class="in"><div class="lchips">'+chip(1,P,'1 à '+P)+(P>2?chip(Math.max(1,P-2),P,'Dernières 3'):'')+chip(P,P,'Leçon '+P)+chip(1,GN,'Tout')+'</div><div class="lrange" style="margin-top:10px"><label>De <select class="search sel" id="tra">'+rg.map(k=>opt(k,r.a)).join('')+'</select></label><label>à <select class="search sel" id="trb">'+rg.map(k=>opt(k,r.b)).join('')+'</select></label></div><div class="trbars">';
   trLessons().forEach(l=>{const m=mast(l);h+='<div class="tb2"><span>'+l+'</span><i><b style="height:'+m+'%"></b></i></div>'});
   h+='</div></div></details>';
-  h+=hSec('voc',['lib','xhome','tradapt']);if(!Object.keys(S.cards||{}).length)h+='<p class="hint" style="text-align:left;margin-top:10px">Commence une leçon pour créer tes premières cartes.</p>';h+='<details class="dt" style="margin-top:14px"><summary>Grammaire, lecture et expression</summary><div class="in">'+hSec('gra')+hSec('lir')+'</div></details>';
+  h+=hSec('voc',['lib','xhome','tradapt'].concat(S.ecrit?[]:['trwrite']));if(!Object.keys(S.cards||{}).length)h+='<p class="hint" style="text-align:left;margin-top:10px">Commence une leçon pour créer tes premières cartes.</p>';h+='<details class="dt" style="margin-top:14px"><summary>Grammaire, lecture et expression</summary><div class="in">'+hSec('gra')+hSec('lir')+'</div></details>';
   h+=profExHtml();
   return h;
 }
@@ -903,7 +913,7 @@ function moreV(){
   sec('lec','Apprendre',['tomes','alpha','lessons','rulesref','lib','xhome']);
   sec('sui','Données et rappels',['backup','grem','hoff']);sec('sui','Aide',['reps','grep']);
   if(SHARED)h+='<div class="card note" style="margin-top:12px;font-size:14px"><button class="btn" data-act="shareapp">Partager l\'application</button><div class="hint">Outil d\'étude indépendant, non affilié aux auteurs du Tome de Médine. Chaque personne a sa propre progression, enregistrée sur son appareil.</div></div>';
-  h+=G.storageHtml()+FSRS.statusHtml(S,S.rl);h+='<div class="foot" style="margin-top:8px">Version 3.1 · 14 novembre 2026</div>';
+  h+='<button class="row" style="grid-template-columns:1fr auto;margin-top:14px" data-act="placechange"><span><span class="t">Changer mon niveau</span><br><span class="s">Recalibrer leçons et recommandations</span></span><span class="muted" aria-hidden="true">›</span></button>';h+=G.storageHtml()+FSRS.statusHtml(S,S.rl);h+='<div class="foot" style="margin-top:8px">Version 3.1 · 14 novembre 2026</div>';
   const store=dbState==='account'?'Progression enregistrée sur ton compte.':'Progression enregistrée sur cet appareil seulement.';
   h+='<div class="foot"><div>'+store+'</div>'+(S.started.length?'<button class="link" data-act="reset">Effacer ma progression</button>':'')+'</div>';
   return h;
@@ -920,7 +930,7 @@ function bkBanner(){
   return '<div class="card note" style="margin-top:12px;font-size:14px"><b>Pense à sauvegarder.</b> Un fichier de sauvegarde garde ta progression même si l\'appli est supprimée ou réinstallée.<button class="btn" style="margin-top:8px" data-act="bkfile">Exporter ma progression</button></div>';
 }
 function navHtml(){
-  if(IMMERSIVE.indexOf(view.n)>=0)return '';
+  if(IMMERSIVE.indexOf(view.n)>=0||view.n==='place')return '';
   const m={txl:'train',txt:'train',anal:'train',ana1:'train',svrev:'surahs',rdal:'train',defi:'train',defires:'train',tajc:'surahs',salat:'surahs',tomes:'learn',tml:'learn',tbook:'learn',q500:'surahs',ecoute:'surahs',prog:'home',cjsheet:'train',cjday:'train',grem:'more',badges:'more',alpha:'learn',home:'home',explorer:'home',learn:'learn',lhub:'learn',course:'learn',lessons:'learn',lesson:'learn',guide:'learn',train:'train',testsetup:'train',qsetup:'train',sentsetup:'train',surahs:'surahs',surah:'surahs'};
   const act=m[view.n]||'more';
   const due=dueIds().length;
@@ -929,7 +939,7 @@ function navHtml(){
 }
 function startGroup(g){
   if(S.started.indexOf(g)<0)S.started.push(g);
-  DATA[g-1].words.forEach((_,w)=>{['fa','af'].forEach(d=>{const id=g+'.'+w+'.'+d;if(!S.cards[id])S.cards[id]={b:0,d:today()}})});
+  DATA[g-1].words.forEach((_,w)=>{(S.ecrit?['fa','af']:['af']).forEach(d=>{const id=g+'.'+w+'.'+d;if(!S.cards[id])S.cards[id]={b:0,d:today()}})});
   touch();
   startSession();
 }
@@ -941,7 +951,7 @@ function startSession(cap){
   go({n:'session'});
 }
 function testPool(){
-  const dirs=tcfg.dir==='both'?['fa','af']:[tcfg.dir];
+  const dirs=!S.ecrit?['af']:(tcfg.dir==='both'?['fa','af']:[tcfg.dir]);
   const ids=[];
   DATA.forEach(gr=>{if(tcfg.l.has(gr.lesson))gr.words.forEach((_,w)=>dirs.forEach(d=>ids.push(gr.g+'.'+w+'.'+d)))});
   return ids;
@@ -1763,7 +1773,7 @@ function newLoad(){const m={};Object.keys(S.cards).forEach(k=>{const c=S.cards[k
 function ensureCards(ws){
   const cap=(S.newCap||15)*2,load=newLoad();
   let k=1;
-  ws.forEach(e=>{['fa','af'].forEach(dir=>{
+  ws.forEach(e=>{(S.ecrit?['fa','af']:['af']).forEach(dir=>{
     const id=e.g+'.'+e.i+'.'+dir;
     if(!S.cards[id]){while((load[addDays(k)]||0)>=cap)k++;const d=addDays(k);load[d]=(load[d]||0)+1;S.cards[id]={b:0,d:d,n:1}}
   })});
@@ -2190,7 +2200,7 @@ function startMini(){daily={mini:1,stage:'rev'};if(dueIds().length){daily.did=1;
 function dailyNext(){
   if(!daily){go({n:'home'});return}
   if(daily.mini){if(!daily.did){daily.did=1;if(startQuick(4))return}daily=null;go({n:'home'});const first=G.dayDone();render();G.celebrate({k:'day',t:'2 minutes, c\'est fait',s:first?'La journée compte pour ta série et ton objectif. +50 XP.':'Merci, à demain.'});return}
-  const order=['rev','quick','rules','guide'];
+  const order=S.ecrit?['rev','quick','rules','guide']:['rev','rules','guide'];
   for(;;){
     const i=order.indexOf(daily.stage);
     if(i<0||i>=order.length-1)break;
@@ -2612,7 +2622,7 @@ function txdV(){const x=TEXTS[txd.i];let h='<div class="top"><button class="link
  return h}
 function txdSay(rate){try{const s=TEXTS[txd.i].s[txd.items[txd.n]][0];speechSynthesis.cancel();speechSynthesis.speak(utt(ttsAr(s),'ar-SA',rate))}catch(e){}}
 function txActHtml(i){return '<div class="card" style="margin-top:12px"><b>S\'exercer sur ce texte</b><div class="cgrid two" style="margin-top:8px"><button class="btn" data-act="txcgo" data-i="'+i+'">Lecture à trous</button><button class="btn" data-act="txdgo" data-i="'+i+'">Dictée</button></div>'+(G.srOn()?'<button class="btn" style="margin-top:8px" data-act="txrd" data-i="'+i+'">● Lire à voix haute (noté)</button>':'')+'</div>'}
-function twAdd(g,i){const gi=DATA.findIndex(x=>x.g===g);if(gi<0)return;let n=0;['fa','af'].forEach(dir=>{const id=g+'.'+i+'.'+dir;if(!S.cards[id]){S.cards[id]={b:0,d:today(),n:1};n++}else if(S.cards[id].d>today()){S.cards[id].d=today()}});if(S.started.indexOf(g)<0)S.started.push(g);touch();G.toast('Ajouté à tes révisions','À revoir dès aujourd\'hui.')}
+function twAdd(g,i){const gi=DATA.findIndex(x=>x.g===g);if(gi<0)return;let n=0;(S.ecrit?['fa','af']:['af']).forEach(dir=>{const id=g+'.'+i+'.'+dir;if(!S.cards[id]){S.cards[id]={b:0,d:today(),n:1};n++}else if(S.cards[id].d>today()){S.cards[id].d=today()}});if(S.started.indexOf(g)<0)S.started.push(g);touch();G.toast('Ajouté à tes révisions','À revoir dès aujourd\'hui.')}
 const Q5TOT=77430,Q5T={n:'Nom',v:'Verbe',p:'Petit mot'};
 function q5c(){S.q5c=S.q5c||{n:100,f:1,t:'all',u:0,q:20};return S.q5c}
 function q5St(r){return (S.q5||{})[r]||null}
@@ -3455,7 +3465,7 @@ function render(){
   else if(view.n==='surahs')h=surahsV();
   else if(view.n==='surah')h=surahV(view.i);
   else if(view.n==='home')h=pathV();
-  else if(view.n==='learn')h=learnV();else if(view.n==='explorer')h=explorerV(view.k);else if(view.n==='prog')h=progV();
+  else if(view.n==='place')h=placeV();else if(view.n==='learn')h=learnV();else if(view.n==='explorer')h=explorerV(view.k);else if(view.n==='prog')h=progV();
   else if(view.n==='txl')h=txListV();
   else if(view.n==='txt')h=txV(view.i);
   else if(view.n==='txc')h=txcV();
@@ -3525,8 +3535,8 @@ document.addEventListener('click',e=>{
 app.addEventListener('click',e=>{
   const b=e.target.closest('[data-act]');if(!b||b.disabled)return;
   const a=b.dataset.act;
-  if(a==='home')go({n:'home'});else if(a==='explore')go({n:'explorer',k:b.dataset.k||'lec'});else if(a==='learn')go({n:'learn'});else if(a==='quitses'){if(ses&&ses.done>0){ses.askQuit=true;render()}else go({n:'home'})}else if(a==='resumeq'){if(ses){ses.askQuit=false;render()}}
-  else if(a==='hellogo'){hello.st=1;go({n:'home'})}
+  if(a==='home')go({n:'home'});else if(a==='explore')go({n:'explorer',k:b.dataset.k||'lec'});else if(a==='learn')go({n:'learn'});else if(a==='placedeb'){S.place='debut';setProg(1);go({n:'home'})}else if(a==='placemid'){view={n:'place',mid:true};render()}else if(a==='placeset'){const el=document.getElementById('plsel');const n=el?Number(el.value):1;S.place='niveau';setProg(n);go({n:'home'})}else if(a==='placefin'){S.place='fini';setProg(GN);go({n:'home'})}else if(a==='placechange'){view={n:'place'};render()}else if(a==='ecriton'){S.ecrit=1;Object.keys(S.cards).forEach(k=>{if(k.slice(-3)==='.af'){const q=k.split('.');const id=q[0]+'.'+q[1]+'.fa';if(!S.cards[id])S.cards[id]={b:0,d:today(),n:1}}});touch();try{G.toast('Écriture activée','Les cartes français → arabe sont ajoutées.')}catch(e){}render()}else if(a==='quitses'){if(ses&&ses.done>0){ses.askQuit=true;render()}else go({n:'home'})}else if(a==='resumeq'){if(ses){ses.askQuit=false;render()}}
+  else if(a==='hellogo'){hello.st=1;go(S.place?{n:'home'}:{n:'place'})}
   else if(a==='tomes')go({n:'tomes'});
   else if(a==='tmsay')speak(b.dataset.v);
   else if(a==='tmlong')speakLong(b.dataset.v);

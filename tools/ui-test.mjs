@@ -52,7 +52,9 @@ console.log('Timing local :', JSON.stringify(timing))
 await page.screenshot({ path: resolve(screens, '01-accueil.png') })
 await page.locator('[data-act="hellogo"]').first().click()
 await page.waitForTimeout(600)
-await page.screenshot({ path: resolve(screens, '02-que-veux-tu-faire.png') })
+await page.screenshot({ path: resolve(screens, '02-placement.png') })
+await page.locator('[data-act="placedeb"]').first().click()
+await page.waitForTimeout(500)
 
 const audit = async label => {
   const result = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21aa']).analyze()
