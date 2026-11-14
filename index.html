@@ -284,7 +284,7 @@ input.search{background:var(--surface);border:1px solid var(--line);border-radiu
 .cat .s{display:block;font-size:12.5px;color:var(--muted);margin-top:2px}
 .cat.wide{grid-column:1/-1;flex-direction:row;align-items:center;min-height:86px}
 .btn.primary{border:0;border-radius:999px;background:linear-gradient(180deg,#12906f,#0b6a52);box-shadow:0 10px 24px rgb(15 122 95/22%)}
-.tabbar{left:12px;right:12px;bottom:max(10px,env(safe-area-inset-bottom));border:0;border-radius:22px;background:var(--surface);box-shadow:0 12px 32px rgb(15 32 28/16%);padding:6px 8px}
+.tabbar{left:50%;right:auto;transform:translateX(-50%);width:min(536px,calc(100% - 24px));bottom:max(10px,env(safe-area-inset-bottom));border:0;border-radius:22px;background:var(--surface);box-shadow:0 12px 32px rgb(15 32 28/16%);padding:6px 6px}.tb{font-size:10.5px;padding:0 2px}.tb span{white-space:nowrap}
 .tb{border-radius:16px}
 .tb.on{background:var(--accent);color:var(--accent-fg)}
 </style>
@@ -825,6 +825,15 @@ function pathV(){
   h+=G.recapHtml()+'</div>';
   return h;
 }
+function learnV(){
+  const P=prog(),nv=Object.keys(S.guide.done).length;
+  let h='<div class="mast"><span class="eyebrow">Tome de Médine</span><h1>Apprendre</h1><p class="sub">'+P+' leçons au programme · '+nv+' validées</p></div>';
+  h+='<div class="card" style="margin-top:16px"><div class="top"><b>Parcours guidé</b><span class="chip">'+nv+' / '+GN+'</span></div><div class="bar" style="margin-top:8px" aria-hidden="true"><i style="width:'+Math.round(nv/GN*100)+'%"></i></div><button class="btn primary" style="margin-top:12px" data-act="guide">'+(nv?'Continuer le parcours':'Commencer la leçon 1')+'</button></div>';
+  h+='<h2>Leçons</h2><div class="list">';
+  for(let l=1;l<=P;l++)h+=lrowHtml(l,P);
+  h+='</div><h2>Ressources</h2><div class="list">'+[['tomes','Autres livres','Médine 2-3, Riyadh, Al-Asâsî','lib'],['alpha','Alphabet','Lettres, voyelles, tracé','abc'],['lessons','Pages du livre','Fiche de chaque leçon','doc'],['rulesref','Aide-mémoire','Toutes les règles','rule']].map(o=>'<button class="row hrow k-lec" data-act="'+o[0]+'"><span class="hri">'+hIc(o[3])+'</span><span><span class="t">'+o[1]+'</span><br><span class="s">'+o[2]+'</span></span><span class="muted" aria-hidden="true">›</span></button>').join('')+'</div>';
+  return h;
+}
 function explorerV(k){
   const cats=[['lec','Leçons'],['voc','Vocabulaire'],['gra','Grammaire'],['lir','Lire et parler'],['cor','Coran'],['sui','Mon suivi']];
   const c=k||'lec';
@@ -887,13 +896,13 @@ function trainV(){
   return h;
 }
 function moreV(){
-  let h='<h1>Plus</h1>';
+  let h='<h1>Moi</h1>';
   const F=hFeat(),sec=(k,t,as)=>{h+='<h2 class="kh k-'+k+'">'+t+'</h2><div class="list">'+as.map(a=>F.find(o=>o.a===a)).filter(Boolean).map(hRow).join('')+'</div>'};
   sec('sui','Mon suivi',['hub','objedit','gbadges']);
   sec('lec','Apprendre',['tomes','alpha','lessons','rulesref','lib','xhome']);
   sec('sui','Données et rappels',['backup','grem','hoff']);sec('sui','Aide',['reps','grep']);
   if(SHARED)h+='<div class="card note" style="margin-top:12px;font-size:14px"><button class="btn" data-act="shareapp">Partager l\'application</button><div class="hint">Outil d\'étude indépendant, non affilié aux auteurs du Tome de Médine. Chaque personne a sa propre progression, enregistrée sur son appareil.</div></div>';
-  h+=G.storageHtml()+FSRS.statusHtml(S,S.rl);
+  h+=G.storageHtml()+FSRS.statusHtml(S,S.rl);h+='<div class="foot" style="margin-top:8px">Version 3.1 · 14 novembre 2026</div>';
   const store=dbState==='account'?'Progression enregistrée sur ton compte.':'Progression enregistrée sur cet appareil seulement.';
   h+='<div class="foot"><div>'+store+'</div>'+(S.started.length?'<button class="link" data-act="reset">Effacer ma progression</button>':'')+'</div>';
   return h;
@@ -911,10 +920,10 @@ function bkBanner(){
 }
 function navHtml(){
   if(IMMERSIVE.indexOf(view.n)>=0)return '';
-  const m={txl:'train',txt:'train',anal:'train',ana1:'train',svrev:'surahs',rdal:'train',defi:'train',defires:'train',tajc:'surahs',salat:'surahs',tomes:'home',tml:'home',tbook:'home',q500:'surahs',ecoute:'surahs',prog:'home',cjsheet:'train',cjday:'train',grem:'more',badges:'more',alpha:'home',home:'home',explorer:'home',lhub:'home',course:'home',lessons:'more',lesson:'home',guide:'home',train:'train',testsetup:'train',qsetup:'train',sentsetup:'train',surahs:'surahs',surah:'surahs'};
+  const m={txl:'train',txt:'train',anal:'train',ana1:'train',svrev:'surahs',rdal:'train',defi:'train',defires:'train',tajc:'surahs',salat:'surahs',tomes:'learn',tml:'learn',tbook:'learn',q500:'surahs',ecoute:'surahs',prog:'home',cjsheet:'train',cjday:'train',grem:'more',badges:'more',alpha:'learn',home:'home',explorer:'home',learn:'learn',lhub:'learn',course:'learn',lessons:'learn',lesson:'learn',guide:'learn',train:'train',testsetup:'train',qsetup:'train',sentsetup:'train',surahs:'surahs',surah:'surahs'};
   const act=m[view.n]||'more';
   const due=dueIds().length;
-  const it=[['home','Accueil','<path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/>'],['train','S\'entraîner','<path d="M8 5v14l11-7z"/>'],['surahs','Coran','<path d="M12 3a9 9 0 1 0 9 9 7 7 0 0 1-9-9z"/>'],['more','Plus','<circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/>']];
+  const it=[['home',"Aujourd'hui",'<path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/>'],['learn','Apprendre','<path d="M3 5c3-1 6-1 9 1v14c-3-2-6-2-9-1zM21 5c-3-1-6-1-9 1v14c3-2 6-2 9-1z"/>'],['train','Réviser','<path d="M8 5v14l11-7z"/>'],['surahs','Coran','<path d="M12 3a9 9 0 1 0 9 9 7 7 0 0 1-9-9z"/>'],['more','Moi','<path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM4 21a8 8 0 0 1 16 0"/>']];
   return '<nav class="tabbar" aria-label="Navigation">'+it.map(o=>'<button class="tb'+(act===o[0]?' on':'')+'" data-act="'+o[0]+'"'+(act===o[0]?' aria-current="page"':'')+'><svg viewBox="0 0 24 24" aria-hidden="true">'+o[2]+'</svg><span>'+o[1]+(o[0]==='train'&&due?'<i class="bdg">'+(due>99?'99+':due)+'</i>':'')+'</span></button>').join('')+'</nav>';
 }
 function startGroup(g){
@@ -3445,7 +3454,7 @@ function render(){
   else if(view.n==='surahs')h=surahsV();
   else if(view.n==='surah')h=surahV(view.i);
   else if(view.n==='home')h=pathV();
-  else if(view.n==='explorer')h=explorerV(view.k);else if(view.n==='prog')h=progV();
+  else if(view.n==='learn')h=learnV();else if(view.n==='explorer')h=explorerV(view.k);else if(view.n==='prog')h=progV();
   else if(view.n==='txl')h=txListV();
   else if(view.n==='txt')h=txV(view.i);
   else if(view.n==='txc')h=txcV();
@@ -3515,7 +3524,7 @@ document.addEventListener('click',e=>{
 app.addEventListener('click',e=>{
   const b=e.target.closest('[data-act]');if(!b||b.disabled)return;
   const a=b.dataset.act;
-  if(a==='home')go({n:'home'});else if(a==='explore')go({n:'explorer',k:b.dataset.k||'lec'});else if(a==='quitses'){if(ses&&ses.done>0){ses.askQuit=true;render()}else go({n:'home'})}else if(a==='resumeq'){if(ses){ses.askQuit=false;render()}}
+  if(a==='home')go({n:'home'});else if(a==='explore')go({n:'explorer',k:b.dataset.k||'lec'});else if(a==='learn')go({n:'learn'});else if(a==='quitses'){if(ses&&ses.done>0){ses.askQuit=true;render()}else go({n:'home'})}else if(a==='resumeq'){if(ses){ses.askQuit=false;render()}}
   else if(a==='hellogo'){hello.st=1;go({n:'home'})}
   else if(a==='tomes')go({n:'tomes'});
   else if(a==='tmsay')speak(b.dataset.v);

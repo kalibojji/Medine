@@ -72,6 +72,8 @@ const goto = async (act, name) => {
 }
 
 await goto('home', '03-accueil-complet.png')
+await goto('learn', '03a-apprendre.png')
+await goto('home', '03a-retour.png')
 await goto('explore', '03b-explorer.png')
 await goto('home', '03c-retour-accueil.png')
 await goto('train', '04-entrainement.png')
@@ -112,7 +114,7 @@ await page.locator('[data-act="surahs"]').first().click()
 await page.waitForTimeout(400)
 
 const tabs = await page.locator('.tabbar .tb').count()
-if (tabs !== 4) fail(`barre d'onglets : ${tabs} entrées au lieu de 4`)
+if (tabs !== 5) fail(`barre d'onglets : ${tabs} entrées au lieu de 5`)
 if ((await page.locator('.tabbar [aria-current="page"]').count()) !== 1) fail('onglet courant ambigu')
 
 await page.emulateMedia({ colorScheme: 'dark' })
