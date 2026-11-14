@@ -3,7 +3,7 @@
 <style>@font-face{font-family:'Figtree';src:url(fonts/figtree-300-900.woff) format('woff') format('woff');font-weight:300 900;font-style:normal;font-display:swap}@font-face{font-family:'Scheherazade New';src:url(fonts/scheherazade-new-400.woff) format('woff') format('woff');font-weight:400;font-style:normal;font-display:swap}@font-face{font-family:'Scheherazade New';src:url(fonts/scheherazade-new-700.woff) format('woff') format('woff');font-weight:700;font-style:normal;font-display:swap}</style>
 <style>
 :root{
-  --bg:#eef2f1; --surface:#ffffff; --fg:#14201e; --muted:#566864; --line:#d5dedb;
+  --bg:#eef2f1; --surface:#ffffff; --fg:#14201e; --muted:#566864;--chip-fg:#4d5f5a; --line:#d5dedb;
   --accent:#0d6b62; --accent-fg:#ffffff; --accent-soft:#dcefeb;
   --good:#1f7a4a; --good-soft:#dff2e6; --bad:#a93a2a; --bad-soft:#f7e1dc; --added:#a5530a;
   --font-ui:'Figtree',system-ui,-apple-system,'Segoe UI',sans-serif;
@@ -12,7 +12,7 @@
 }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
-    --bg:#0e1614; --surface:#16211f; --fg:#e7efed; --muted:#9bb0ab; --line:#26352f;
+    --bg:#0e1614; --surface:#16211f; --fg:#e7efed; --muted:#9bb0ab;--chip-fg:#9bb0ab; --line:#26352f;
     --accent:#4cc3b4; --accent-fg:#052220; --accent-soft:#183a35;
     --good:#62d092; --good-soft:#173a29; --bad:#ff8f7b; --bad-soft:#40201a; --added:#f2a65a;
     --accent2:#e2bd4a; --hero1:#13574f; --hero2:#0a2e2a; --shadow:0 1px 2px rgb(0 0 0 / 30%),0 8px 24px rgb(0 0 0 / 30%);
@@ -20,7 +20,7 @@
   }
 }
 :root[data-theme="dark"]{
-  --bg:#0e1614; --surface:#16211f; --fg:#e7efed; --muted:#9bb0ab; --line:#26352f;
+  --bg:#0e1614; --surface:#16211f; --fg:#e7efed; --muted:#9bb0ab;--chip-fg:#9bb0ab; --line:#26352f;
   --accent:#4cc3b4; --accent-fg:#052220; --accent-soft:#183a35;
   --good:#62d092; --good-soft:#173a29; --bad:#ff8f7b; --bad-soft:#40201a; --added:#f2a65a;
   --accent2:#e2bd4a; --hero1:#13574f; --hero2:#0a2e2a; --shadow:0 1px 2px rgb(0 0 0 / 30%),0 8px 24px rgb(0 0 0 / 30%);
@@ -57,7 +57,7 @@ h2{font-size:13px;margin:28px 0 10px;text-transform:uppercase;letter-spacing:.08
 .row .no{font-weight:700;color:var(--muted)}
 .row .t{font-weight:600}
 .row .s{font-size:13px;color:var(--muted)}
-.chip{font-size:12px;font-weight:600;padding:4px 9px;border-radius:99px;background:var(--line);color:var(--muted);white-space:nowrap}
+.chip{font-size:12px;font-weight:600;padding:4px 9px;border-radius:99px;background:var(--line);color:var(--chip-fg);white-space:nowrap}
 .chip.run{background:var(--accent-soft);color:var(--accent)}
 .chip.ok{background:var(--good-soft);color:var(--good)}
 .link{background:none;border:0;color:var(--accent);font-weight:600;padding:8px 0;cursor:pointer;min-height:44px}
