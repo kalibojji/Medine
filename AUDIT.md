@@ -59,6 +59,9 @@ hadiths, alphabet, conjugaison, dictée, écoute, enregistrement, badges, object
    calculé sur l'historique FSRS).
 7. **Remédiation peu visible** : → carte « À consolider » dans *S'entraîner* dès 3 mots en échec
    répété, avec révision dédiée.
+8. **Accueil de plus de 3 000 px** et six grilles de fonctions qui dupliquaient le menu : → accueil
+   ramené à ~1 650 px avec six entrées vers un écran **Explorer** par catégorie ; menu *Plus*
+   regroupé par usage (Mon suivi, Apprendre, Données et rappels, Aide).
 
 ### Restant
 8. **Poids initial** : 1,46 Mo de JS inline et 775 Ko de données dans le HTML ; rien n'est interactif

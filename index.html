@@ -766,8 +766,15 @@ function pathV(){
   h+=G.heroHtml({act:'gday',resume:!!(daily&&(ses||sx||(qz&&qz.i<qz.items.length))),mini:G.doneToday()?'':'gmini',sub:(due?Math.min(due,15)+' carte'+(due>1?'s':'')+' à réviser, un défi, puis la leçon '+P:'Un défi, puis la nouveauté : leçon '+P)+' · 10 min'});
   h+=resumeHtml()+noProgHtml();h+='<h2>Pour toi</h2><div class="list">'+hProps().map(hRow).join('')+'</div>';
   if(!alSt().done&&!nv)h+='<button class="card objc" data-act="alpha" style="margin-top:12px"><span><span class="label">Tu débutes complètement ?</span><b>Fondations : alphabet et lecture</b><span class="muted" style="font-size:13px;display:block">Lettres, voyelles, tracé, avant la leçon 1</span></span><span class="muted" aria-hidden="true">›</span></button>';
-  ['lec','voc','gra','lir','cor','sui'].forEach(k=>{h+=hSec(k)});
+  h+='<h2>Explorer</h2><div class="list">'+[['lec','Leçons','Parcours, pages du livre, exercices'],['voc','Vocabulaire','Cartes, quiz, dictionnaire'],['gra','Grammaire','Règles, conjugaison, phrases'],['lir','Lire et parler','Histoires, textes, lecture à voix haute'],['cor','Coran','Sourates, écoute, mémorisation'],['sui','Mon suivi','Statistiques, objectif, badges, réglages']].map(o=>'<button class="row" style="grid-template-columns:1fr auto" data-act="explore" data-k="'+o[0]+'"><span><span class="t">'+o[1]+'</span><br><span class="s">'+o[2]+'</span></span><span class="muted" aria-hidden="true">›</span></button>').join('')+'</div>';
   h+=G.recapHtml()+'</div>';
+  return h;
+}
+function explorerV(k){
+  const cats=[['lec','Leçons'],['voc','Vocabulaire'],['gra','Grammaire'],['lir','Lire et parler'],['cor','Coran'],['sui','Mon suivi']];
+  const c=k||'lec';
+  let h='<div class="top"><button class="link" data-act="home">‹ Accueil</button></div><h1 style="margin-top:6px">Explorer</h1><div class="seg" style="margin-top:10px;grid-template-columns:repeat(3,1fr);grid-auto-flow:row">'+cats.map(o=>'<button class="segb'+(o[0]===c?' on':'')+'" aria-pressed="'+(o[0]===c)+'" data-act="explore" data-k="'+o[0]+'">'+o[1]+'</button>').join('')+'</div>';
+  h+=hSec(c);
   return h;
 }
 function progV(){
@@ -827,9 +834,9 @@ function trainV(){
 function moreV(){
   let h='<h1>Plus</h1>';
   const F=hFeat(),sec=(k,t,as)=>{h+='<h2 class="kh k-'+k+'">'+t+'</h2><div class="list">'+as.map(a=>F.find(o=>o.a===a)).filter(Boolean).map(hRow).join('')+'</div>'};
-  sec('sui','Mon suivi',['hub','objedit','gbadges','reps']);
-  sec('lec','Ressources',['tomes','alpha','lessons','rulesref','lib','xhome']);
-  sec('sui','Réglages',['grem','backup','hoff','grep']);
+  sec('sui','Mon suivi',['hub','objedit','gbadges']);
+  sec('lec','Apprendre',['tomes','alpha','lessons','rulesref','lib','xhome']);
+  sec('sui','Données et rappels',['backup','grem','hoff']);sec('sui','Aide',['reps','grep']);
   if(SHARED)h+='<div class="card note" style="margin-top:12px;font-size:14px"><button class="btn" data-act="shareapp">Partager l\'application</button><div class="hint">Outil d\'étude indépendant, non affilié aux auteurs du Tome de Médine. Chaque personne a sa propre progression, enregistrée sur son appareil.</div></div>';
   h+=G.storageHtml()+FSRS.statusHtml(S,S.rl);
   const store=dbState==='account'?'Progression enregistrée sur ton compte.':'Progression enregistrée sur cet appareil seulement.';
@@ -849,7 +856,7 @@ function bkBanner(){
 }
 function navHtml(){
   if(IMMERSIVE.indexOf(view.n)>=0)return '';
-  const m={txl:'train',txt:'train',anal:'train',ana1:'train',svrev:'surahs',rdal:'train',defi:'train',defires:'train',tajc:'surahs',salat:'surahs',tomes:'home',tml:'home',tbook:'home',q500:'surahs',ecoute:'surahs',prog:'home',cjsheet:'train',cjday:'train',grem:'more',badges:'more',alpha:'home',home:'home',lhub:'home',course:'home',lessons:'more',lesson:'home',guide:'home',train:'train',testsetup:'train',qsetup:'train',sentsetup:'train',surahs:'surahs',surah:'surahs'};
+  const m={txl:'train',txt:'train',anal:'train',ana1:'train',svrev:'surahs',rdal:'train',defi:'train',defires:'train',tajc:'surahs',salat:'surahs',tomes:'home',tml:'home',tbook:'home',q500:'surahs',ecoute:'surahs',prog:'home',cjsheet:'train',cjday:'train',grem:'more',badges:'more',alpha:'home',home:'home',explorer:'home',lhub:'home',course:'home',lessons:'more',lesson:'home',guide:'home',train:'train',testsetup:'train',qsetup:'train',sentsetup:'train',surahs:'surahs',surah:'surahs'};
   const act=m[view.n]||'more';
   const due=dueIds().length;
   const it=[['home','Accueil','<path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/>'],['train','S\'entraîner','<path d="M8 5v14l11-7z"/>'],['surahs','Coran','<path d="M12 3a9 9 0 1 0 9 9 7 7 0 0 1-9-9z"/>'],['more','Plus','<circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/>']];
@@ -3381,7 +3388,7 @@ function render(){
   else if(view.n==='surahs')h=surahsV();
   else if(view.n==='surah')h=surahV(view.i);
   else if(view.n==='home')h=pathV();
-  else if(view.n==='prog')h=progV();
+  else if(view.n==='explorer')h=explorerV(view.k);else if(view.n==='prog')h=progV();
   else if(view.n==='txl')h=txListV();
   else if(view.n==='txt')h=txV(view.i);
   else if(view.n==='txc')h=txcV();
@@ -3451,7 +3458,7 @@ document.addEventListener('click',e=>{
 app.addEventListener('click',e=>{
   const b=e.target.closest('[data-act]');if(!b||b.disabled)return;
   const a=b.dataset.act;
-  if(a==='home')go({n:'home'});else if(a==='quitses'){if(ses&&ses.done>0){ses.askQuit=true;render()}else go({n:'home'})}else if(a==='resumeq'){if(ses){ses.askQuit=false;render()}}
+  if(a==='home')go({n:'home'});else if(a==='explore')go({n:'explorer',k:b.dataset.k||'lec'});else if(a==='quitses'){if(ses&&ses.done>0){ses.askQuit=true;render()}else go({n:'home'})}else if(a==='resumeq'){if(ses){ses.askQuit=false;render()}}
   else if(a==='hellogo'){hello.st=1;go({n:'home'})}
   else if(a==='tomes')go({n:'tomes'});
   else if(a==='tmsay')speak(b.dataset.v);

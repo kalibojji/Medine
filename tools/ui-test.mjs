@@ -72,6 +72,8 @@ const goto = async (act, name) => {
 }
 
 await goto('home', '03-accueil-complet.png')
+await goto('explore', '03b-explorer.png')
+await goto('home', '03c-retour-accueil.png')
 await goto('train', '04-entrainement.png')
 await goto('more', '05-plus.png')
 await goto('hub', '05b-exercices.png')
