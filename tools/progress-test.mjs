@@ -36,7 +36,7 @@ const counter = async () => Number((await page.locator('#app').innerText()).matc
 const before = await counter()
 if (!Number.isFinite(before)) fail('compteur de séance introuvable')
 
-await page.locator('[data-act="reveal"]').first().click()
+await page.locator('[data-act="conf"]').first().click()
 await page.waitForTimeout(300)
 await page.locator('[data-act="ok"]').first().click()
 await page.waitForTimeout(700)
