@@ -41,8 +41,8 @@ npm run verify      # vérifications statiques + test navigateur (Playwright)
 - `npm run check` : invariants statiques (en-tête, polices, données JSON, syntaxe, manifeste, SW,
   budgets de poids) et qualité du contenu pédagogique.
 - `npm test` : charge l'application dans Chromium, parcourt huit écrans avec captures et audit
-  axe-core, vérifie qu'une réponse est enregistrée puis conservée après rechargement, et teste le
-  chargement hors-ligne après service worker.
+  axe-core, vérifie qu'une réponse est enregistrée puis conservée après rechargement, qu'une séance
+  quittée est reprise au même endroit, et teste le chargement hors-ligne après service worker.
 
 La CI (`.github/workflows/ci.yml`) exécute les deux à chaque push.
 
