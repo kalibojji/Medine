@@ -6,6 +6,15 @@ espacée, phrases à construire, Coran, hadiths, alphabet et conjugaison. Applic
 
 Site : https://kalibojji.github.io/Medine/
 
+## Parcours
+
+Au premier lancement, l'application demande **où vous en êtes** (début, leçon actuelle, tome 1
+terminé) et calibre le programme, les recommandations et les révisions sur cette réponse.
+
+La priorité est la **reconnaissance arabe → français** : les nouvelles cartes, la séance du jour et
+les quiz vont dans ce sens. L'écriture (français → arabe, dictée) est optionnelle : elle apparaît
+dans *Apprendre* une fois le tome 1 terminé, ou via « Changer mon niveau » dans *Moi*.
+
 ## Contenu
 
 - **650 leçons** réparties en 34 tomes, **10 556 mots**, **1 404 règles**, **1 223 exercices**
