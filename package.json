@@ -5,7 +5,7 @@
   "type": "module",
   "description": "Vocabulaire Médine — application d'apprentissage du vocabulaire arabe du Tome de Médine.",
   "scripts": {
-    "check": "node tools/check.mjs",
+    "check": "node tools/check.mjs && node tools/data-check.mjs",
     "test": "node tools/ui-test.mjs && node tools/offline-test.mjs",
     "verify": "npm run check && npm test"
   },
