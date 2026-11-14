@@ -50,7 +50,7 @@ alphabet, conjugaison, dictÃ©e, Ã©coute, enregistrement, badges, objectifs, sauv
 7. **Monofichier** : pas de modules, pas de sÃ©paration source/produit, revue de code difficile.
 
 ### P2 â€” produit et apprentissage
-8. **Accueil dense** : dix blocs empilÃ©s, trois sections repliÃ©es, plusieurs actions primaires
+8. **Accueil : hiérarchie inversée** — le bloc « Tu avais déjà une progression ? » et le prompt d'installation précédaient le titre et l'action principale (corrigé en Phase 2).
    concurrentes. La prochaine action utile n'est pas unique.
 9. **Charge cognitive** : ~50 vues, de nombreux modes d'entraÃ®nement sans parcours guidÃ© unique
    au-delÃ  du parcours Â« leÃ§on Â».
@@ -78,4 +78,4 @@ alphabet, conjugaison, dictÃ©e, Ã©coute, enregistrement, badges, objectifs, sauv
 - Un utilisateur nouveau comprend quoi faire en moins de 10 secondes.
 - Score d'accessibilitÃ© automatisÃ© sans erreur bloquante sur les parcours principaux.
 
-Statut : Phase 0 en cours.
+Statut : Phase 0 terminée, Phase 1 terminée, première correction d'ergonomie livrée (hiérarchie de l'accueil, contraste AA).
