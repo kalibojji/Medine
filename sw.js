@@ -1,5 +1,5 @@
-const V='medine-1794494056';
-const CORE=["./", "index.html", "manifest.json", "icon-192.png", "icon-512.png", "apple-touch-icon.png"];
+const V='medine-20261114-1';
+const CORE=["./", "index.html", "manifest.json", "icon-192.png", "icon-512.png", "apple-touch-icon.png", "fonts/figtree-300-900.woff", "fonts/scheherazade-new-400.woff", "fonts/scheherazade-new-700.woff"];
 self.addEventListener('install',e=>{e.waitUntil(caches.open(V).then(c=>Promise.allSettled(CORE.map(u=>c.add(new Request(u,{cache:'reload'}))))).then(()=>self.skipWaiting()))});
 self.addEventListener('activate',e=>{const P=V.split('-')[0]+'-';e.waitUntil(caches.keys().then(k=>Promise.all(k.filter(x=>x.indexOf(P)===0&&x!==V).map(x=>caches.delete(x)))).then(()=>self.clients.claim()))});
 self.addEventListener('fetch',e=>{const r=e.request;if(r.method!=='GET'||!/^https?:/.test(r.url))return;const u=new URL(r.url);
