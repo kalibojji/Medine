@@ -6,7 +6,7 @@
   "description": "Vocabulaire Médine — application d'apprentissage du vocabulaire arabe du Tome de Médine.",
   "scripts": {
     "check": "node tools/check.mjs && node tools/data-check.mjs",
-    "test": "node tools/ui-test.mjs && node tools/progress-test.mjs && node tools/workflow-test.mjs && node tools/offline-test.mjs",
+    "test": "node tools/ui-test.mjs && node tools/progress-test.mjs && node tools/workflow-test.mjs && node tools/placement-test.mjs && node tools/offline-test.mjs",
     "verify": "npm run check && npm test"
   },
   "devDependencies": {
