@@ -66,6 +66,7 @@ await page.waitForTimeout(1000)
 const offlineText = (await page.locator('body').innerText()).trim()
 if (offlineText.length < 20) fail('page vide hors-ligne')
 if (!(await page.locator('[data-act="hellogo"]').count())) fail('application non montée hors-ligne')
+if (!(await page.getByText('Hors-ligne').count())) fail('bandeau hors-ligne absent')
 
 await browser.close()
 server.close()
