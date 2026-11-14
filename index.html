@@ -911,7 +911,7 @@ function trainV(){
   const r=trGet(),P=prog(),opt=(v,c)=>'<option value="'+v+'"'+(v===c?' selected':'')+'>'+v+'</option>';
   let rg=[];for(let k=1;k<=GN;k++)rg.push(k);
   const chip=(a,b,t)=>'<button class="segb'+(r.a===a&&r.b===b?' on':'')+'" data-act="trr" data-a="'+a+'" data-b="'+b+'">'+t+'</button>';
-  let h='<h1>S\'entraîner</h1>';
+  let h='<h1>Réviser</h1>';
   const ad=trAdaptive(),due=dueIds().length;
   h+='<div class="card next"><span class="label">Séance adaptée à ton niveau</span><b>'+(ad.pick.length?'On travaille la leçon '+ad.pick.join(', '):'Rien à travailler')+'</b><span class="muted" style="font-size:14px">'+(ad.pick.length?'Les points faibles viennent en premier ('+Math.round(ad.avg)+' % de maîtrise sur ces leçons)'+(ad.write?'. Niveau solide : tu écris les réponses.':'.'):'Ajoute une leçon au parcours.')+'</span><button class="btn primary" style="margin-top:8px" data-act="tradapt"'+(ad.ids.length?'':' disabled')+'>Lancer la séance adaptée</button>'+(due?'<button class="btn" style="margin-top:8px" data-act="trdue">'+due+' carte'+(due>1?'s':'')+' à réviser</button>':'')+'</div>';
   {const L=hardList();if(L.length>=3)h+='<button class="card objc" style="margin-top:12px;grid-template-columns:1fr auto" data-act="hardtest"><span><span class="label">À consolider</span><b>'+L.length+' mot'+(L.length>1?'s':'')+' difficile'+(L.length>1?'s':'')+'</b><span class="muted" style="font-size:13px;display:block">Plus souvent ratés que réussis · les réviser maintenant</span></span><span class="muted" aria-hidden="true">›</span></button>'}
@@ -1801,7 +1801,7 @@ function ensureCards(ws){
   })});
 }
 function prog(){if(S.prog)return Math.min(GN,Math.max(1,S.prog));const d=Object.keys(S.guide.done).map(Number);return Math.min(GN,Math.max(1,d.length?Math.max.apply(null,d)+1:1))}
-function setProg(n){n=Math.min(GN,Math.max(1,n));const o=prog();S.prog=n;for(let l=o+1;l<=n;l++)ensureLesson(l);touch()}
+function setProg(n){n=Math.min(GN,Math.max(1,n));const o=prog();S.prog=n;S.tr={a:Math.max(1,n-2),b:n};for(let l=o+1;l<=n;l++)ensureLesson(l);touch()}
 function boostIds(){
   const P=prog(),w=[];
   DATA.forEach(gr=>{if(gr.lesson>=Math.max(1,P-2)&&gr.lesson<=P)gr.words.forEach((_,i)=>w.push({g:gr.g,i:i,m:wordMin(gr.g,i)+Math.random()*.5}))});
@@ -3568,7 +3568,7 @@ document.addEventListener('click',e=>{
 app.addEventListener('click',e=>{
   const b=e.target.closest('[data-act]');if(!b||b.disabled)return;
   const a=b.dataset.act;
-  if(a==='home')go({n:'home'});else if(a==='explore')go({n:'explorer',k:b.dataset.k||'lec'});else if(a==='learn')go({n:'learn'});else if(a==='placedeb'){S.place='debut';setProg(1);go({n:'home'})}else if(a==='ptstart')ptStart();else if(a==='ptpick'){if(pt){const ok=Number(b.dataset.v)===pt.qs[pt.i].a;if(ok)pt.last=pt.ls[pt.i];pt.i++;if(pt.i>=pt.ls.length){S.place='test';setProg(pt.last);pt=null;go({n:'home'})}else render()}}else if(a==='placemid'){view={n:'place',mid:true};render()}else if(a==='placeset'){const el=document.getElementById('plsel');const n=el?Number(el.value):1;S.place='niveau';setProg(n);go({n:'home'})}else if(a==='placefin'){S.place='fini';setProg(GN);go({n:'home'})}else if(a==='placechange'){view={n:'place'};render()}else if(a==='csv'){try{csvExport();G.toast('Export prêt','medine-suivi.csv a été téléchargé.')}catch(e){}render()}else if(a==='ecriton'){S.ecrit=1;Object.keys(S.cards).forEach(k=>{if(k.slice(-3)==='.af'){const q=k.split('.');const id=q[0]+'.'+q[1]+'.fa';if(!S.cards[id])S.cards[id]={b:0,d:today(),n:1}}});touch();try{G.toast('Écriture activée','Les cartes français → arabe sont ajoutées.')}catch(e){}render()}else if(a==='quitses'){if(ses&&ses.done>0){ses.askQuit=true;render()}else go({n:'home'})}else if(a==='resumeq'){if(ses){ses.askQuit=false;render()}}
+  if(a==='home')go({n:'home'});else if(a==='explore')go({n:'explorer',k:b.dataset.k||'lec'});else if(a==='learn')go({n:'learn'});else if(a==='placedeb'){S.place='debut';setProg(1);go({n:'home'})}else if(a==='ptstart')ptStart();else if(a==='ptpick'){if(pt){const ok=Number(b.dataset.v)===pt.qs[pt.i].a;if(ok)pt.last=pt.ls[pt.i];pt.i++;if(pt.i>=pt.ls.length){S.place='test';setProg(pt.last);pt=null;go({n:'home'})}else render()}}else if(a==='placemid'){view={n:'place',mid:true};render()}else if(a==='placeset'){const el=document.getElementById('plsel');const n=el?Number(el.value):1;S.place='niveau';setProg(n);go({n:'home'})}else if(a==='placefin'){S.place='fini';setProg(GN);S.tr={a:1,b:GN};go({n:'home'})}else if(a==='placechange'){view={n:'place'};render()}else if(a==='csv'){try{csvExport();G.toast('Export prêt','medine-suivi.csv a été téléchargé.')}catch(e){}render()}else if(a==='ecriton'){S.ecrit=1;Object.keys(S.cards).forEach(k=>{if(k.slice(-3)==='.af'){const q=k.split('.');const id=q[0]+'.'+q[1]+'.fa';if(!S.cards[id])S.cards[id]={b:0,d:today(),n:1}}});touch();try{G.toast('Écriture activée','Les cartes français → arabe sont ajoutées.')}catch(e){}render()}else if(a==='quitses'){if(ses&&ses.done>0){ses.askQuit=true;render()}else go({n:'home'})}else if(a==='resumeq'){if(ses){ses.askQuit=false;render()}}
   else if(a==='hellogo'){hello.st=1;go(S.place?{n:'home'}:{n:'place'})}
   else if(a==='tomes')go({n:'tomes'});
   else if(a==='tmsay')speak(b.dataset.v);
