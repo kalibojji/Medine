@@ -38,6 +38,17 @@ const bodyText = (await page.locator('body').innerText()).trim()
 if (bodyText.length < 20) fail('page vide au chargement')
 if (!(await page.title()).includes('Médine')) fail('titre de page manquant')
 
+const timing = await page.evaluate(() => {
+  const nav = performance.getEntriesByType('navigation')[0]
+  const fcp = performance.getEntriesByName('first-contentful-paint')[0]
+  return {
+    domContentLoaded: Math.round(nav?.domContentLoadedEventEnd ?? 0),
+    load: Math.round(nav?.loadEventEnd ?? 0),
+    firstContentfulPaint: fcp ? Math.round(fcp.startTime) : null,
+  }
+})
+console.log('Timing local :', JSON.stringify(timing))
+
 await page.screenshot({ path: resolve(screens, '01-accueil.png') })
 await page.locator('[data-act="hellogo"]').first().click()
 await page.waitForTimeout(600)

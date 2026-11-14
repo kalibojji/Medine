@@ -3113,18 +3113,7 @@ function recoOf(){
 }
 function surahNext(){for(let i=0;i<SU.length;i++){if((S.sur[SU[i].n]||[]).length<SU[i].v.length)return i}return -1}
 function helloV(){
-  if(hello.st===0){
-    return '<div class="hello"><div class="ar-big hello-ar">السَّلَامُ عَلَيْكُمْ وَرَحْمَةُ اللَّهِ</div><div class="hello-fr">Que la paix et la miséricorde d\'Allah soient sur toi</div><button class="btn primary" style="margin-top:28px" data-act="hellogo">Entrer</button></div>';
-  }
-  const st=objStatus(),r=recoOf(),dt=objDaysTxt(),due=dueIds().length,sn=surahNext();
-  if(dfPending&&dfPending.a){view={n:'defi',o:dfPending};dfPending=null;return defiV()}
-  let h='<h1>Que veux-tu faire ?</h1>'+resumeHtml()+restoreHtml()+noProgHtml();
-  h+='<div class="card next" style="margin-top:14px"><span class="label">Mon objectif</span><b>Maîtriser la leçon '+st.L+' avant le prochain cours</b>'+(dt?'<div class="muted" style="font-size:14px;margin-top:2px">'+dt+'</div>':'')+'<div class="bar" aria-hidden="true"><i style="width:'+st.pct+'%"></i></div><div class="muted" style="font-size:13px;margin-top:6px">'+st.pct+' % · '+(st.done?'objectif atteint':st.todo.length+' leçon'+(st.todo.length>1?'s':'')+' à consolider')+'</div><button class="link" style="margin-top:6px" data-act="objedit">Modifier mon objectif</button></div>';
-  h+='<div class="card next" style="margin-top:12px"><span class="label">Recommandé pour toi</span><b>'+esc(r.t)+'</b><span class="muted" style="font-size:14px">'+esc(r.s)+'</span><button class="btn primary" style="margin-top:8px" data-act="'+r.act+'"'+(r.l?' data-l="'+r.l+'"':'')+'>'+esc(r.b)+'</button></div>';
-  h+='<h2>Autre chose</h2><div class="list">';
-  [['daily','Séance du jour',due+' carte'+(due>1?'s':'')+' à réviser'],['course','Cours et phrases types','Leçons 1 à '+prog()],['guide','Parcours guidé','Leçon par leçon'],['xhome','Mots du quotidien',xDueIds().length?xDueIds().length+' à réviser':'Mots et phrases de tous les jours'],['surahs','Sourates',sn>=0?'Prochaine : '+SU[sn].fr.split(' · ')[0]:'Toutes révisées'],['home','Accueil complet','Toutes les fonctions']].forEach(o=>{h+='<button class="row" style="grid-template-columns:1fr auto" data-act="'+o[0]+'"><span><span class="t">'+o[1]+'</span><br><span class="s">'+esc(o[2])+'</span></span><span class="muted" aria-hidden="true">›</span></button>'});
-  h+='</div>';
-  return h;
+  return '<div class="hello"><div class="ar-big hello-ar">السَّلَامُ عَلَيْكُمْ وَرَحْمَةُ اللَّهِ</div><div class="hello-fr">Que la paix et la miséricorde d\'Allah soient sur toi</div><button class="btn primary" style="margin-top:28px" data-act="hellogo">Entrer</button></div>';
 }
 function objV(){
   const o=objGet();
