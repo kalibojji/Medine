@@ -580,7 +580,7 @@ let hasAr=false;
 let lib={q:'',th:'',a:1,b:23,sz:5};
 let tcfg={l:new Set(),dir:'both',n:20};
 
-function fixS(o){o.log=o.log||{};o.st=o.st||{};o.goal=o.goal||20;o.exams=o.exams||[];o.started=o.started||[];o.cards=o.cards||{};o.place=o.place||null;o.ecrit=o.ecrit||0;o.guide=o.guide||{};o.guide.done=o.guide.done||{};o.guide.pos=o.guide.pos||{};o.err=o.err||{};o.sm=o.sm||{};o.time=o.time||{};o.xc=o.xc||{};o.sur=o.sur||{};o.rep=o.rep||[];o.bk=o.bk||0;if(!o.mig26){if(o.tm){for(let i=3;i>=0;i--){const k='26-'+i;if(o.tm[k]!=null){o.tm['26-'+(i+14)]=o.tm[k];delete o.tm[k]}}}o.mig26=1}return o}
+function fixS(o){o.log=o.log||{};o.st=o.st||{};o.goal=o.goal||20;o.exams=o.exams||[];o.started=o.started||[];o.cards=o.cards||{};o.place=o.place||null;o.ecrit=o.ecrit||0;if(o.place&&o.prog&&o.tr&&!o.trmig){if(o.tr.b<o.prog)o.tr={a:Math.max(1,o.prog-2),b:o.prog};o.trmig=1}o.guide=o.guide||{};o.guide.done=o.guide.done||{};o.guide.pos=o.guide.pos||{};o.err=o.err||{};o.sm=o.sm||{};o.time=o.time||{};o.xc=o.xc||{};o.sur=o.sur||{};o.rep=o.rep||[];o.bk=o.bk||0;if(!o.mig26){if(o.tm){for(let i=3;i>=0;i--){const k='26-'+i;if(o.tm[k]!=null){o.tm['26-'+(i+14)]=o.tm[k];delete o.tm[k]}}}o.mig26=1}return o}
 function blank(){return fixS({v:1,ts:0,started:[],cards:{}})}
 function fmt(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
 function today(){return fmt(new Date())}
