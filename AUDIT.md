@@ -73,7 +73,7 @@ hadiths, alphabet, conjugaison, dictée, écoute, enregistrement, badges, object
 ## 5. Vérification
 
 ```sh
-npm run verify   # 34 invariants + navigation/captures/axe + hors-ligne
+npm run verify   # 36 invariants + contenu + navigation/captures/axe + hors-ligne
 ```
 
 Statut : socle opérationnel, 4 commits sur `agent/phase0-seo`.
